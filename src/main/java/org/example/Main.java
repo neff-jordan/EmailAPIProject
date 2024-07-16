@@ -11,20 +11,30 @@
 
 package org.example;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
 
+        FlatLightLaf.setup();
+
         JFrame frame = new JFrame("Financial Planner");
+        frame.setSize(1200, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         CardLayout cardLayout = new CardLayout();
         JPanel cardPanel = new JPanel(cardLayout);
 
+        LoginPage loginPage = new LoginPage(cardLayout, cardPanel);
+
+
         frame.add(cardPanel);
         frame.setVisible(true);
+
+        cardLayout.show(cardPanel,"Login");
 
     }
 }
