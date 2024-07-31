@@ -4,64 +4,107 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
-public class LoginPage implements ActionListener {
+public class LoginPage extends Layout implements ActionListener {
 
-    JLabel username = new JLabel("username: ");
-    JLabel password = new JLabel("password: ");
-    JLabel email = new JLabel("email: ");
+    private JTextField userIDField = new JTextField();
+    private JPasswordField userPasswordField = new JPasswordField();
+    private JLabel userIDLabel = new JLabel("username:");
+    private JLabel userPasswordLabel = new JLabel("password:");
+    private JLabel messageLabel = new JLabel();
+    private JButton loginButton = new JButton("Login");
+    private JButton createButton = new JButton("Create Account");
+    private JButton resetButton = new JButton("Reset");
+    MySQLConnection connection = MySQLConnection.getInstance();
 
-    JTextField usernameInput = new JTextField(3);
-    JTextField passwordInput = new JTextField(3);
-    JTextField emailInput = new JTextField();
 
-    JButton login = new JButton("Login");
-    JButton create = new JButton("Create Account");
-    JButton forgot = new JButton("Forgot password?");
+    public LoginPage(CardLayout cardLayout, JPanel cardPanel, MySQLConnection connection) throws SQLException {
 
-    public LoginPage(CardLayout cardLayout, JPanel cardPanel) {
+        super(cardLayout, cardPanel);
+        this.connection = connection;
 
-        JPanel panel = new JPanel(new GridLayout(3, 1)); // Using 4 rows for username, password, email, and buttons
+        // Set layout to null for absolute positioning
+        this.setLayout(null);
 
-        // creating the row for the USERNAME label and text field
-        JPanel usernameRow = new JPanel(new GridLayout(1, 2));
-        usernameRow.add(username);
-        usernameRow.add(usernameInput);
-        panel.add(usernameRow);
+        userIDLabel.setBounds(113, 170, 75, 25);
+        userPasswordLabel.setBounds(113, 220, 75, 25);
+        messageLabel.setBounds(125, 250, 250, 35);
+        messageLabel.setFont(new Font(null, Font.ITALIC, 25));
+        userIDField.setBounds(188, 170, 200, 25);
+        userPasswordField.setBounds(188, 220, 200, 25);
+        loginButton.setBounds(65, 320, 125, 50);
+        createButton.setBounds(195, 320, 125, 50);
+        resetButton.setBounds(325, 320, 125, 50);
 
-        // creating the row for the PASSWORD label and text field
-        JPanel passwordRow = new JPanel(new GridLayout(1, 2));
-        passwordRow.add(password);
-        passwordRow.add(passwordInput);
-        panel.add(passwordRow);
+        loginButton.setFocusable(false);
+        createButton.setFocusable(false);
+        resetButton.setFocusable(false);
 
-        // add buttons
-        JPanel buttons = new JPanel(new FlowLayout());
-        buttons.add(login);
-        buttons.add(create);
-        buttons.add(forgot);
-        panel.add(buttons);
+        loginButton.addActionListener(this);
+        createButton.addActionListener(this);
+        resetButton.addActionListener(this);
 
-        // none of this works
-        Dimension textFieldSize = new Dimension(100, 25); // Change the dimensions as needed
-        usernameInput.setPreferredSize(textFieldSize);
-        passwordInput.setPreferredSize(textFieldSize);
-        username.setAlignmentX(Component.CENTER_ALIGNMENT);
-        password.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        login.addActionListener(this);
-        create.addActionListener(this);
-        forgot.addActionListener(this);
-
-        cardPanel.add(panel);
+        this.add(userIDLabel);
+        this.add(userPasswordLabel);
+        this.add(messageLabel);
+        this.add(userIDField);
+        this.add(userPasswordField);
+        this.add(loginButton);
+        this.add(createButton);
+        this.add(resetButton);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Handle button clicks here
+        if (e.getSource() == resetButton) {
+            userIDField.setText("");
+            userPasswordField.setText("");
+        }
+
+        if (e.getSource() == createButton) {
+            cardLayout.show(cardPanel, "Create Account");
+        }
+
+        if (e.getSource() == loginButton) {
+            String userID = userIDField.getText();
+            String password = String.valueOf(userPasswordField.getPassword());
+
+            MySQLConnection connect = null;
+            try {
+                connect = MySQLConnection.getInstance();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            if (connect.containsUsername(userID)) {
+                if (connect.getPassword(userID).equals(password)) {
+                    CurrentUser.setInstance(userID);
+                    messageLabel.setForeground(Color.green);
+                    messageLabel.setText("Login successful");
+
+                    // Switch to HomePage
+                    HomePage homePage = new HomePage(cardLayout, cardPanel, userID, connection);
+
+                    //cardPanel.add(homePage, "HomePage");
+                    //cardLayout.show(cardPanel, "Home");
+
+                    switchToCard("Homepage");
+
+                } else {
+                    messageLabel.setForeground(Color.red);
+                    messageLabel.setText("Wrong password");
+                }
+            } else {
+                messageLabel.setForeground(Color.red);
+                messageLabel.setText("Username not found");
+            }
+        }
+    }
+    public void switchToCard(String cardName) {
+        cardLayout.show(cardPanel, cardName);
+        cardPanel.revalidate();
+        cardPanel.repaint();
     }
 
-    public static void main(String[] args) {
-        new LoginPage(new CardLayout(), new JPanel());
-    }
 }

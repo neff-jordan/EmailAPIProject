@@ -1,4 +1,3 @@
-
 package backend;
 
 import com.sendgrid.Method;
@@ -13,12 +12,15 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         MarsPhoto photoFetcher = new MarsPhoto();
-        MarsWeather weatherFetcher = new MarsWeather();
+        //MarsWeather weatherFetcher = new MarsWeather();
+        //LaunchObjects launchObjects = new LaunchObjects();
+        SpaceNews spaceNews = new SpaceNews();
         WriteEmail emailComposer = new WriteEmail();
 
-        String photoData = photoFetcher.getMarsPhoto();
-        String weatherData = weatherFetcher.getMarsWeather();
-        String emailBody = emailComposer.composeEmail(photoData, weatherData);
+        String photoUrl = photoFetcher.getMarsPhoto();
+        //String weatherData = weatherFetcher.getMarsWeather();
+        String news = spaceNews.fetchAndReturnArticles();
+        String emailBody = emailComposer.composeEmail(photoUrl, news);
 
         String sendgridApiKey = System.getenv("SENDGRID_API_KEY");
         if (sendgridApiKey == null || sendgridApiKey.isEmpty()) {
@@ -29,17 +31,8 @@ public class Main {
         Email from = new Email("neff.jordan1936@gmail.com");
         String subject = "Daily Mars Status Update";
         Email to = new Email("archeryworldcup@icloud.com");
-        Content content = new Content("text/plain", emailBody);
-        //Content testContent = new Content("text/plain","hahahaha");
+        Content content = new Content("text/html", emailBody); // Changed to HTML content
         Mail mail = new Mail(from, subject, to, content);
-
-//        mail.setFrom(from);
-//        mail.setSubject(subject);
-//        mail.addContent(content);
-
-//        Personalization personalization = new Personalization();
-//        personalization.addTo(to);
-//        mail.addPersonalization(personalization);
 
         SendGrid sg = new SendGrid(sendgridApiKey);
         Request request = new Request();
@@ -64,6 +57,3 @@ public class Main {
         }
     }
 }
-
-
-

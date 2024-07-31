@@ -1,32 +1,40 @@
 package backend;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 public class MarsPhoto {
     private static final String NASA_API_KEY = "DUXawtyz6CSw9lMIt70nbs46h3iWFugsZUGa0Y7X";
-    private static final String NASA_API_URL = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=" + NASA_API_KEY;
+    private static final String NASA_API_URL = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos?api_key=" + NASA_API_KEY;
+
     public String getMarsPhoto() throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
 
-        URL url = new URL(NASA_API_URL);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
+        // GET request
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(NASA_API_URL))
+                .GET()
+                .build();
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String inputLine;
-        StringBuilder content = new StringBuilder();
+        // Send the request and get the response
+        HttpResponse<String> response = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
 
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
+        // Parse JSON response
+        JSONObject jsonObject = new JSONObject(response.body());
+        JSONArray latestPhotos = jsonObject.getJSONArray("latest_photos");
+
+        // Extract the first photo URL (you can change this logic as needed)
+        if (latestPhotos.length() > 0) {
+            JSONObject firstPhoto = latestPhotos.getJSONObject(0);
+            String imgSrc = firstPhoto.getString("img_src");
+            return imgSrc;
+        } else {
+            throw new Exception("No photos found");
         }
-
-        in.close();
-        conn.disconnect();
-
-        return content.toString();
-
     }
-
 }

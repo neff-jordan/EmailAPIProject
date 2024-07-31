@@ -1,12 +1,17 @@
 package backend;
 
 public class WriteEmail {
-    public String composeEmail(String photoData, String weatherData) {
-        StringBuilder emailBody = new StringBuilder();
-        emailBody.append("Mars Daily Status Report\n\n");
-        emailBody.append("Photo Data:\n").append(photoData).append("\n\n");
-        emailBody.append("Weather Data:\n").append(weatherData).append("\n");
+    public String composeEmail(String photoUrl, String news) {
+        return "<html>" +
+                "<body>" +
+                "<h1>Daily Mars Status Update</h1>" +
+                "<h2>Photo</h2>" +
+                "<img src=\"" + photoUrl + "\" alt=\"Mars Photo\" style=\"max-width: 100%; height: auto;\"/>" +
+                "<h2>News</h2>" +
+                "<p>" + news + "</p>" +
+                //"<img src=\"" + weatherData + "\" alt=\"Mars Photo\" style=\"max-width: 100%; height: auto;\"/>" +
 
-        return emailBody.toString();
+                "</body>" +
+                "</html>";
     }
 }
