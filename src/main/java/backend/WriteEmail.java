@@ -10,7 +10,6 @@ public class WriteEmail {
                 "<h2>News</h2>" +
                 "<p>" + news + "</p>" +
                 //"<img src=\"" + weatherData + "\" alt=\"Mars Photo\" style=\"max-width: 100%; height: auto;\"/>" +
-
                 "</body>" +
                 "</html>";
     }

@@ -4,9 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.sql.SQLException;
 
-public class LoginPage extends Layout implements ActionListener {
+public class LoginPage extends Layout implements ActionListener, ComponentListener {
 
     private JTextField userIDField = new JTextField();
     private JPasswordField userPasswordField = new JPasswordField();
@@ -23,6 +25,8 @@ public class LoginPage extends Layout implements ActionListener {
 
         super(cardLayout, cardPanel);
         this.connection = connection;
+
+        this.addComponentListener(this);
 
         // Set layout to null for absolute positioning
         this.setLayout(null);
@@ -56,14 +60,15 @@ public class LoginPage extends Layout implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e)  {
         if (e.getSource() == resetButton) {
             userIDField.setText("");
             userPasswordField.setText("");
         }
 
         if (e.getSource() == createButton) {
-            cardLayout.show(cardPanel, "Create Account");
+
+            cardLayout.show(cardPanel, "CreateAccount");
         }
 
         if (e.getSource() == loginButton) {
@@ -80,31 +85,52 @@ public class LoginPage extends Layout implements ActionListener {
             if (connect.containsUsername(userID)) {
                 if (connect.getPassword(userID).equals(password)) {
                     CurrentUser.setInstance(userID);
-                    messageLabel.setForeground(Color.green);
-                    messageLabel.setText("Login successful");
+                    System.out.println("Login successful");
 
                     // Switch to HomePage
-                    HomePage homePage = new HomePage(cardLayout, cardPanel, userID, connection);
+                    HomePage homePage = null;
+                    try {
+                        homePage = new HomePage(cardLayout, cardPanel, userID, connection);
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
 
-                    //cardPanel.add(homePage, "HomePage");
-                    //cardLayout.show(cardPanel, "Home");
-
-                    switchToCard("Homepage");
+                    cardPanel.add(homePage, "HomePage");
+                    cardLayout.show(cardPanel, "HomePage");
+                    switchToCard("HomePage");
 
                 } else {
-                    messageLabel.setForeground(Color.red);
-                    messageLabel.setText("Wrong password");
+                    JOptionPane.showMessageDialog(this,"Login unsuccessful. Wrong password.");
+
                 }
             } else {
-                messageLabel.setForeground(Color.red);
-                messageLabel.setText("Username not found");
+                JOptionPane.showMessageDialog(this,"Login unsuccessful. Wrong username.");
             }
         }
     }
+
     public void switchToCard(String cardName) {
         cardLayout.show(cardPanel, cardName);
         cardPanel.revalidate();
         cardPanel.repaint();
     }
+
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+        resetFields();
+    }
+    private void resetFields() {
+        userIDField.setText("");
+        userPasswordField.setText("");
+        messageLabel.setText("");
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {}
+    @Override
+    public void componentMoved(ComponentEvent e) {}
+    @Override
+    public void componentHidden(ComponentEvent e) {}
 
 }

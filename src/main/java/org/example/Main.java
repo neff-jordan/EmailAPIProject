@@ -11,7 +11,7 @@
 
 package org.example;
 
-import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatDarculaLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,9 +20,9 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) throws SQLException {
 
-        FlatLightLaf.setup();
+        FlatDarculaLaf.setup();
 
-        JFrame frame = new JFrame("Space News Signup");
+        JFrame frame = new JFrame("Space Industry News");
         frame.setSize(520, 640);
         frame.setMinimumSize(new Dimension(520, 640));
         frame.setMaximumSize(new Dimension(520, 640));
@@ -34,12 +34,15 @@ public class Main {
         MySQLConnection connection = MySQLConnection.getInstance();
 
         LoginPage loginPage = new LoginPage(cardLayout, cardPanel, connection);
+        cardPanel.add(loginPage, "LoginPage");
 
+        CreateAccountPage createAccountPage = new CreateAccountPage(cardLayout, cardPanel, connection);
+        cardPanel.add(createAccountPage, "CreateAccount");
 
         frame.add(cardPanel);
         frame.setVisible(true);
 
-        cardLayout.show(cardPanel,"Login");
+        cardLayout.show(cardPanel,"LoginPage");
 
     }
 }
