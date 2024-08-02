@@ -11,14 +11,19 @@
 
 package org.example;
 
+import backend.SendEmail;
 import com.formdev.flatlaf.FlatDarculaLaf;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimerTask;
+import java.util.Timer;
+
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws Exception {
 
         FlatDarculaLaf.setup();
 
@@ -42,9 +47,48 @@ public class Main {
         frame.add(cardPanel);
         frame.setVisible(true);
 
+        sendEmailTime();
+
         cardLayout.show(cardPanel,"LoginPage");
 
     }
+
+    public static void sendEmailTime() throws Exception {
+
+        Timer timer = new Timer();
+        // Create a TimerTask for the email sending
+        TimerTask emailTask = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    SendEmail send = new SendEmail();
+                    send.sendingEmail();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        // Calculate the initial delay
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        Date scheduledTime = calendar.getTime();
+
+        // If the current time is past 9 AM, schedule for the next day
+        if (scheduledTime.before(new Date())) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            scheduledTime = calendar.getTime();
+        }
+
+        // Schedule the task to run daily at 9 AM
+        timer.scheduleAtFixedRate(emailTask, scheduledTime, 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+
+    }
+
 }
 
 

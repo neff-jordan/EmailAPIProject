@@ -143,4 +143,24 @@ public class MySQLConnection {
         }
     }
 
+    public List<String> getAllSubscribedUsersEmails() throws SQLException {
+        List<String> subscribedUsers = new ArrayList<>();
+
+        String sql = "SELECT email FROM users WHERE subscribed = 1";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                subscribedUsers.add(resultSet.getString("email"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to retrieve subscribed users");
+            e.printStackTrace();
+            throw e;
+        }
+
+        return subscribedUsers;
+    }
+
 }

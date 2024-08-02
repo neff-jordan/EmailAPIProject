@@ -59,7 +59,7 @@ public class HomePage extends Layout implements ActionListener {
 
             // add them to the database which will then run through all the emails and send them out
             connection.subscribeUser(currentUser.getLoggedInUser());
-            JOptionPane.showMessageDialog(this, "You have successfully subscribed!");
+            JOptionPane.showMessageDialog(this, "You have successfully subscribed! Emails are sent everyday at 9am EST.");
 
         } else if(e.getSource() == unsub) {
 

@@ -3,14 +3,13 @@ package backend;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Random;
 
 public class SpaceNews {
-                                            // auto update with the current date + make response only 3-5 articles
-    private static final String API_URL = "https://api.spaceflightnewsapi.net/v4/articles/?limit=10&published_at_lte=2024-07-01&title_contains=SpaceX";
 
     public static void main(String[] args) {
         SpaceNews spaceNews = new SpaceNews();
@@ -39,7 +38,8 @@ public class SpaceNews {
                 articlesBuilder.append("Title: ").append(title).append("\n")
                         .append("URL: ").append(url).append("\n")
                         .append("Summary: ").append(summary).append("\n")
-                        .append("Published At: ").append(publishedAt).append("\n");
+                        .append("Published At: ").append(publishedAt).append("\n")
+                        .append("\n\n\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,20 +48,22 @@ public class SpaceNews {
     }
 
     private String getApiResponse() throws Exception {
-        URL url = new URL(API_URL);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        int responseCode = conn.getResponseCode();
-        if (responseCode != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + responseCode);
-        }
-        BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-        StringBuilder sb = new StringBuilder();
-        String output;
-        while ((output = br.readLine()) != null) {
-            sb.append(output);
-        }
-        conn.disconnect();
-        return sb.toString();
+
+        Random rand = new Random();
+        int randomPage = rand.nextInt(2100);
+        String API_URL = "https://api.spaceflightnewsapi.net/v4/articles/?limit=5&published_at_lte=2024-08-01&offset=" + randomPage;
+
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest getRequest = HttpRequest.newBuilder()
+                .uri(new URI(API_URL))
+                .GET()
+                .build();
+
+        // Send the request and get the response
+        HttpResponse<String> response = client.send(getRequest, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
     }
 }
