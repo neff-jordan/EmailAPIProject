@@ -1,6 +1,20 @@
+/**
+ * This class is responsible for composing an HTML-formatted email that
+ * includes a Mars photo and space news articles.
+ */
+
 package backend;
 
 public class WriteEmail {
+
+    /**
+     * Composes an HTML email containing a Mars photo and a list of space news articles.
+     *
+     * @param photoUrl The URL of the Mars photo to be included in the email.
+     * @param news A formatted string containing space news articles, where each
+     *             article is separated by two newline characters ("\n\n").
+     * @return A string containing the complete HTML body of the email.
+     */
     public String composeEmail(String photoUrl, String news) {
 
         // Split news into individual stories using a delimiter (e.g., "\n\n")

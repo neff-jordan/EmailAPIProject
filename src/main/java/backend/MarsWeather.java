@@ -1,3 +1,7 @@
+/**
+ * currently not in use because there are no rovers on Mars transmitting current weather data
+ */
+
 package backend;
 
 public class MarsWeather {

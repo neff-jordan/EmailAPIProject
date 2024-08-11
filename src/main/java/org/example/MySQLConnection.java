@@ -1,3 +1,22 @@
+/**
+ * Manages the connection to the MySQL database and provides methods for performing various database operations.
+ * This class follows the Singleton pattern to ensure that only one instance of the database connection exists throughout
+ * the application lifecycle. It provides functionalities for user management, including checking username existence,
+ * retrieving passwords, adding users, and managing subscriptions.
+ *
+ * Key Responsibilities:
+ * - Establishing and maintaining a connection to the MySQL database.
+ * - Checking if a username exists in the database.
+ * - Retrieving passwords for a given username.
+ * - Adding new users to the database.
+ * - Subscribing and unsubscribing users to/from email notifications.
+ * - Retrieving a list of all subscribed users' email addresses.
+ *
+ * Usage:
+ * - Obtain the single instance of this class using the `getInstance()` method.
+ * - Use the provided methods to interact with the `users` table in the database.
+ */
+
 package org.example;
 
 import java.sql.*;
@@ -5,11 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MySQLConnection {
+
     private static MySQLConnection instance;
     private Connection connection;
 
 
     private MySQLConnection() throws SQLException {
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -26,6 +47,7 @@ public class MySQLConnection {
         }
     }
 
+    // Singleton pattern to ensure only one instance of MySQLConnection
     public static synchronized MySQLConnection getInstance() throws SQLException {
         if (instance == null) {
             instance = new MySQLConnection();
@@ -33,6 +55,7 @@ public class MySQLConnection {
         return instance;
     }
 
+    // Return the current database connection
     public Connection getConnection() {
         return connection;
     }

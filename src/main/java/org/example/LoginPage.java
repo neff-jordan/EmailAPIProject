@@ -1,3 +1,7 @@
+/**
+ * LoginPage allows users to log in, create an account, or reset their input fields.
+ */
+
 package org.example;
 
 import javax.swing.*;
@@ -7,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.sql.SQLException;
+
 
 public class LoginPage extends Layout implements ActionListener, ComponentListener {
 
@@ -20,7 +25,14 @@ public class LoginPage extends Layout implements ActionListener, ComponentListen
     private JButton resetButton = new JButton("Reset");
     MySQLConnection connection = MySQLConnection.getInstance();
 
-
+    /**
+     * Constructor for LoginPage.
+     *
+     * @param cardLayout The CardLayout used for switching between cards.
+     * @param cardPanel  The JPanel containing the different cards.
+     * @param connection  The MySQLConnection instance for database operations.
+     * @throws SQLException If there is an error connecting to the database.
+     */
     public LoginPage(CardLayout cardLayout, JPanel cardPanel, MySQLConnection connection) throws SQLException {
 
         super(cardLayout, cardPanel);

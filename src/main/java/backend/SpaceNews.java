@@ -1,3 +1,8 @@
+/**
+ * This class is responsible for fetching space news articles from the
+ * Spaceflight News API and returning them in a formatted string.
+ */
+
 package backend;
 
 import org.json.JSONArray;
@@ -17,6 +22,12 @@ public class SpaceNews {
         System.out.println(articles);
     }
 
+    /**
+     * Fetches space news articles from the Spaceflight News API and returns
+     * them as a formatted string with the title, URL, summary, and publication date.
+     *
+     * @return A formatted string containing space news articles.
+     */
     public String fetchAndReturnArticles() {
         StringBuilder articlesBuilder = new StringBuilder();
         try {
@@ -47,6 +58,13 @@ public class SpaceNews {
         return articlesBuilder.toString();
     }
 
+    /**
+     * Sends a GET request to the Spaceflight News API to fetch a random page
+     * of space news articles.
+     *
+     * @return A string containing the raw JSON response from the API.
+     * @throws Exception if an error occurs during the HTTP request.
+     */
     private String getApiResponse() throws Exception {
 
         Random rand = new Random();

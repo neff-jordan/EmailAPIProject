@@ -1,13 +1,6 @@
-
-/*
-    Author: Jordan Neff
-    Purpose: This program helps a user map out their debits/credits and helps advise on
-             how good a private or public company is for an investing or career move
-
-    Line Count Goal = 4000+
-    Current = 10
-
-*/
+/**
+ * Main class to initialize the Space Industry News application.
+ */
 
 package org.example;
 

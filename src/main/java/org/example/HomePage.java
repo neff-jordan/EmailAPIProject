@@ -1,3 +1,8 @@
+/**
+ * HomePage class represents the main interface after a user logs in.
+ * It allows users to manage their subscription status and log out.
+ */
+
 package org.example;
 
 import javax.swing.*;
@@ -20,7 +25,15 @@ public class HomePage extends Layout implements ActionListener {
     JButton logout = new JButton("Logout");
 
 
-
+    /**
+     * Constructor for HomePage.
+     *
+     * @param cardLayout The CardLayout used for switching between different pages.
+     * @param cardPanel  The main JPanel containing the different pages.
+     * @param userID      The ID of the currently logged-in user.
+     * @param connection  The MySQLConnection instance for database operations.
+     * @throws SQLException if a database access error occurs.
+     */
     public HomePage(CardLayout cardLayout, JPanel cardPanel, String userID, MySQLConnection connection) throws SQLException {
 
         super(cardLayout, cardPanel);

@@ -1,3 +1,11 @@
+/**
+ * Represents a user in the system with personal and login details.
+ * This class is used to store and manage user information such as name, username,
+ * password, and email address. It provides getter and setter methods for each field
+ * to access and modify the user's details. The `toString` method provides a string
+ * representation of the user object for debugging and logging purposes.
+ */
+
 package org.example;
 
 public class User {

@@ -1,3 +1,8 @@
+/**
+ * This class is responsible for sending daily space industry news emails to
+ * subscribed users. It fetches data from various APIs, composes an email
+ * with the fetched information, and sends it using the SendGrid API.
+ */
 
 package backend;
 
@@ -20,6 +25,13 @@ public class SendEmail {
         send.sendingEmail();
     }
 
+    /**
+     * Fetches data from APIs (Mars photos, space news) and sends a daily email
+     * to all subscribed users with the collected information.
+     *
+     * @throws Exception if an error occurs during data fetching, email composition,
+     * or sending the email via the SendGrid API.
+     */
     public void sendingEmail() throws Exception {
 
         MarsPhoto photoFetcher = new MarsPhoto();
