@@ -1,5 +1,7 @@
 # Space Industry News Application
 
+https://youtu.be/zet5Ua2YzgA
+
 ## Overview
 The Space Industry News Application is a Java-based desktop application designed to manage user accounts and provide daily updates on space industry news. Users can create accounts, log in, and subscribe to receive daily emails with space-related news and Mars photos. The application also supports a graphical user interface (GUI) using Swing, and it interacts with a MySQL database to manage user data and subscriptions.
 
